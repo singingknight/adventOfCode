@@ -1,0 +1,19 @@
+{
+  "name": "euler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "wallaby.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/jasmine": "^3.5.0",
+    "jasmine": "^3.5.0",
+    "ts-md5": "^1.2.7"
+  }
+}
