@@ -44,7 +44,7 @@ describe("Day 25", () => {
     it("code", () => {
         testCode(1, 1, 20151125);
         testCode(6, 6, 27995004);
-        //testCode(2981, 3075, 9132360);
+        testCode(2981, 3075, 9132360);
     })
 
 });
