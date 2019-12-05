@@ -1,16 +1,15 @@
 class Day01 {
     getFuel(mass: number) {
-        return Math.trunc(mass/3)-2;
+        return Math.trunc(mass / 3) - 2;
     }
     getFuelList(massList: string) {
         const masses = massList.split('\n').map(m => Number(m.trim()));
         const fuels = masses.map(m => this.getFuel(m));
-        return fuels.reduce((p,n)=>p+n);
+        return fuels.reduce((p, n) => p + n);
     }
     getFullFuel(mass: number) {
         let sum = 0;
-        for (let next=this.getFuel(mass);next>0;next=this.getFuel(next))
-        {
+        for (let next = this.getFuel(mass); next > 0; next = this.getFuel(next)) {
             sum += next;
         }
         return sum;
@@ -18,7 +17,7 @@ class Day01 {
     getFullFuelList(massList: string) {
         const masses = massList.split('\n').map(m => Number(m.trim()));
         const fuels = masses.map(m => this.getFullFuel(m));
-        return fuels.reduce((p,n)=>p+n);
+        return fuels.reduce((p, n) => p + n);
     }
 }
 describe("Day 01", () => {
@@ -45,18 +44,17 @@ describe("Day 01", () => {
     it("fullFuel", () => {
         testFullFuel(1969, 966);
         testFullFuel(100756, 50346);
-        testFullFuelList(input,4941976);
-       }); 
+        testFullFuelList(input, 4941976);
+    });
     it("fuel", () => {
         testFuel(12, 2);
         testFuel(14, 2);
         testFuel(1969, 654);
         testFuelList(`12
-        14`,4);
-        testFuelList(input,3296560);
+        14`, 4);
+        testFuelList(input, 3296560);
     });
-});
-const input = `122281
+    const input = `122281
 124795
 58593
 133744
@@ -156,3 +154,4 @@ const input = `122281
 87078
 120631
 124942`;
+});
