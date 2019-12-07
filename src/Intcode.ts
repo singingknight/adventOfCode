@@ -1,16 +1,28 @@
 export default class Intcode {
   memory: number[] = [];
-  input: number[] = [];
   output: number[] = [];
+  inputFunc: ()=>Promise<number>;
+  outputFunc: (number) => void = (n) => {
+    this.output.push(n);
+  }
   pc = 0;
   load(pgm: number[]) {
     pgm.forEach((v, adr) => this.memory[adr] = v);
   }
   setInput(input: number[] | undefined) {
-    this.input = input || [];
+    let i=0;
+    this.inputFunc = async () => {
+      return input[i++];
+    }
   }
   getOutput() {
     return this.output;
+  }
+  setInputFunc(f:()=>Promise<number>) {
+    this.inputFunc = f;
+  }
+  setOutputFunc(f:(n:number)=>void) {
+    this.outputFunc = f;
   }
   splitCommand(cmd: number) {
     const opCode = cmd % 100;
@@ -19,7 +31,7 @@ export default class Intcode {
     const m3 = Math.trunc(cmd / 10000) % 10;
     return [opCode, m1, m2, m3];
   }
-  run() {
+  async run() {
     while (true) {
       let opCodeLen = 4;
       const [opCode, m1, m2, m3] = this.splitCommand(this.read(this.pc));
@@ -33,11 +45,11 @@ export default class Intcode {
             this.read(this.pc + 1, m1) * this.read(this.pc + 2, m2), m3);
           break;
         case 3:
-          this.set(this.pc + 1, this.input.shift(), m1);
+          this.set(this.pc + 1, await this.inputFunc(), m1);
           opCodeLen = 2;
           break;
         case 4:
-          this.output.push(this.read(this.pc + 1, m1));
+          this.outputFunc(this.read(this.pc + 1, m1));
           opCodeLen = 2;
           break;
         case 5:

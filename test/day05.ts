@@ -2,11 +2,11 @@ import Intcode from "../src/Intcode";
 class Day05 {
 }
 describe("Day 05", () => {
-    var testPgm = (pgm, input, expected) => {
+    var testPgm = async (pgm, input, expected) => {
         var target = new Intcode();
         target.load(pgm);
         target.setInput(input);
-        target.run();
+        await target.run();
         const result=target.getOutput();
         expect(result).toEqual(expected);
     }
