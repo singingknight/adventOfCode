@@ -1,16 +1,17 @@
 export default class Intcode {
   memory: number[] = [];
   output: number[] = [];
-  inputFunc: ()=>Promise<number>;
+  inputFunc: () => Promise<number>;
   outputFunc: (number) => void = (n) => {
     this.output.push(n);
   }
   pc = 0;
+  relBase = 0;
   load(pgm: number[]) {
     pgm.forEach((v, adr) => this.memory[adr] = v);
   }
   setInput(input: number[] | undefined) {
-    let i=0;
+    let i = 0;
     this.inputFunc = async () => {
       return input[i++];
     }
@@ -18,10 +19,10 @@ export default class Intcode {
   getOutput() {
     return this.output;
   }
-  setInputFunc(f:()=>Promise<number>) {
+  setInputFunc(f: () => Promise<number>) {
     this.inputFunc = f;
   }
-  setOutputFunc(f:(n:number)=>void) {
+  setOutputFunc(f: (n: number) => void) {
     this.outputFunc = f;
   }
   splitCommand(cmd: number) {
@@ -78,6 +79,10 @@ export default class Intcode {
             , this.read(this.pc + 1, m1) === this.read(this.pc + 2, m2) ? 1 : 0
             , m3);
           break;
+        case 9:
+          this.relBase += this.read(this.pc + 1, m1);
+          opCodeLen = 2;
+          break;
         case 99:
           return;
         default:
@@ -88,11 +93,27 @@ export default class Intcode {
 
   }
   read(pos: number, mode: number = 1) {
-    pos = mode === 0 ? this.memory[pos] : pos;
-    return this.memory[pos];
+    switch (mode)
+    {
+      case 0:
+        pos = this.memory[pos];
+        break;
+      case 2:
+        pos = this.relBase + this.memory[pos];
+        break;
+    }
+    return this.memory[pos] || 0;
   }
   set(pos: number, value: number, mode: number = 1) {
-    pos = mode === 0 ? this.memory[pos] : pos;
+    switch (mode)
+    {
+      case 0:
+        pos = this.memory[pos];
+        break;
+      case 2:
+        pos = this.relBase + this.memory[pos];
+        break;
+    }
     this.memory[pos] = value;
   }
 }
