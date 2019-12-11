@@ -53,7 +53,7 @@ class Day11 {
         })
     }
     initPanel() {
-        this.panels.set(this.formatPoint(this.position), { pos: this.position, color: 1 })
+        this.paint(1);
     }
     async run() {
         await this.brain.run();
