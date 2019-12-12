@@ -77,13 +77,10 @@ class Day11 {
     factors(n: number) {
         const factors = [];
         let i = 2;
-        while (n > 1) {
-            for (; i <= n; i++) {
-                if (n % i === 0) {
-                    factors.push(i);
-                    n = n / i;
-                    break;
-                }
+        for (i = 2; n > 1; i++) {
+            while (n % i === 0) {
+                factors.push(i);
+                n /= i;
             }
         }
         return factors;
@@ -101,22 +98,14 @@ class Day11 {
         }, x);
     }
     getLoopCount() {
-        let x = this.getPartialLoopCount(
-            this.moons.map(m => {
-                return { pos: { x: m.pos.x }, vel: { x: 0 } };
-            })
+        const partials = ["x", "y", "z"].map(k =>
+            this.getPartialLoopCount(
+                this.moons.map(m => {
+                    return { pos: { x: m.pos[k] }, vel: { x: 0 } };
+                })
+            )
         );
-        let y = this.getPartialLoopCount(
-            this.moons.map(m => {
-                return { pos: { x: m.pos.y }, vel: { x: 0 } };
-            })
-        );
-        let z = this.getPartialLoopCount(
-            this.moons.map(m => {
-                return { pos: { x: m.pos.z }, vel: { x: 0 } };
-            })
-        );
-        return this.getCommon(this.getCommon(x, y), z);
+        return partials.reduce((p, n) => this.getCommon(p, n), 1);
     }
 }
 describe("Day 11", () => {
