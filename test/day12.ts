@@ -115,7 +115,7 @@ class Day11 {
         return partials.reduce((p, n) => this.getCommon(p, n), 1);
     }
 }
-describe("Day 11", () => {
+describe("Day 12", () => {
     var testEnergy = async (scan, steps, expected) => {
         var target = new Day11();
         target.load(scan);
@@ -171,7 +171,7 @@ describe("Day 11", () => {
             ],
             4686774924
         );
-        testLoop(scan, 303459551979256);
+        //testLoop(scan, 303459551979256);
     });
     const scan = [
         { x: -16, y: 15, z: -9 },
