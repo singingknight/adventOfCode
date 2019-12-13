@@ -85,17 +85,24 @@ class Day11 {
         }
         return factors;
     }
-    getCommon(x, y) {
-        const fx = this.factors(x);
-        const fy = this.factors(y);
-        return fy.reduce((p, f) => {
-            let index = fx.indexOf(f);
-            if (index === -1) {
-                return p * f;
-            }
-            fx.splice(index, 1);
-            return p;
-        }, x);
+    getGCD(x,y) {
+        while (y) {
+            [x,y] = [y, x%y];
+        }
+        return x;
+    }
+    getCommon(x, y)  {
+        return x/this.getGCD(x,y)*y;
+        // const fx = this.factors(x);
+        // const fy = this.factors(y);
+        // return fy.reduce((p, f) => {
+        //     let index = fx.indexOf(f);
+        //     if (index === -1) {
+        //         return p * f;
+        //     }
+        //     fx.splice(index, 1);
+        //     return p;
+        // }, x);
     }
     getLoopCount() {
         const partials = ["x", "y", "z"].map(k =>
