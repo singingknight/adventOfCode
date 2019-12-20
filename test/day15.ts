@@ -30,7 +30,7 @@ class Day15 {
         pos = pos || this.position;
         return this.formatPoint(pos);
     }
-    paint(type, direction?) {
+    mark(type, direction?) {
         let pos = { x: this.position.x, y: this.position.y };
         if (direction !== undefined) {
             pos.x += this.directionOffsets[direction].x;
@@ -54,14 +54,12 @@ class Day15 {
         };
         return { pos: pos, type: panel.type, moves: panel.moves };
     }
-    drawMap(pgm) {
-        let steps = 0;
+    getMap(pgm) {
         return new Promise(resolve => {
             this.brain.load(pgm);
-            this.paint("S");
+            this.mark("S");
             this.brain.setInputFunc(() => {
-                steps++;
-                if (steps > 2480) {
+                if (this.stack.length<1) {
                     resolve();
                     return;
                 }
@@ -75,66 +73,39 @@ class Day15 {
                 if (this.retrace) {
                     this.retrace = false;
                     this.nextMove = (4 + this.nextMove - 2) % 4;
-                    for (
-                        let next = (this.nextMove + 1) % 4;
-                        next !== this.stack[this.stack.length - 1];
-                        next = (next + 1) % 4
-                    ) {
-                        const type = this.read(this.position, next).type;
-                        if (type === "X") {
-                            this.nextMove = next;
-                            return;
-                        }
-                    }
                 } else if (n === 0) {
-                    this.paint("#", this.nextMove);
-                    for (
-                        let next = (this.nextMove + 1) % 4;
-                        next !== this.stack[this.stack.length - 1];
-                        next = (next + 1) % 4
-                    ) {
-                        const type = this.read(this.position, next).type;
-                        if (type === "X") {
-                            this.nextMove = next;
-                            return;
-                        }
-                    }
+                    this.mark("#", this.nextMove);
                 } else {
                     if (n === 1) {
-                        this.paint(".");
+                        this.mark(".");
                     } else {
-                        this.paint("O");
+                        this.mark("O");
                         this.oxygen = {
                             x: this.position.x,
                             y: this.position.y
                         };
                     }
-                    this.stack.push((4 + this.nextMove - 2) % 4);
-                    for (
-                        let next = (4 + this.nextMove - 1) % 4;
-                        next !== this.stack[this.stack.length - 1];
-                        next = (next + 1) % 4
-                    ) {
-                        const type = this.read(this.position, next).type;
-                        if (type === "X") {
-                            this.nextMove = next;
-                            return;
-                        }
+                    this.nextMove = (4 + this.nextMove - 2) % 4;
+                    this.stack.push(this.nextMove);
+                }
+                for (
+                    let next = (this.nextMove + 1) % 4;
+                    next !== this.stack[this.stack.length - 1];
+                    next = (next + 1) % 4
+                ) {
+                    const type = this.read(this.position, next).type;
+                    if (type === "X") {
+                        this.nextMove = next;
+                        return;
                     }
                 }
                 this.nextMove = this.stack.pop();
-                if (this.stack.length < 2) {
-                    resolve();
-                    return;
-                }
                 this.retrace = true;
             });
-            this.brain.run().then(() => {
-                throw new Error("Stopped");
-            });
+            this.brain.run();
         });
     }
-    getPanels() {
+    drawMap() {
         const topLeft = { x: 0, y: 0 };
         const bottomRight = { x: 0, y: 0 };
         this.panels.forEach(p => {
@@ -151,7 +122,7 @@ class Day15 {
             }
             lines.push(chars.join(""));
         }
-        return lines.join("\n");
+        console.log(lines.join("\n"));
     }
     getMoves(x, y) {
         const pos = { x: x, y: y };
@@ -183,13 +154,8 @@ class Day15 {
     setDistance(x, y, moves) {
         const pos = { x: x, y: y };
         const posData = this.read(pos);
-        switch (posData.type) {
-            case '.':
-            case 'O':
-            case 'S':
-                break;
-            default:
-                return;
+        if (posData.type === "#") {
+            return;
         }
         if (posData.moves === undefined) {
             posData.moves = moves;
@@ -213,13 +179,14 @@ class Day15 {
 describe("Day 11", () => {
     var testPgm = async (pgm, expected) => {
         var target = new Day15();
-        await target.drawMap(pgm);
+        await target.getMap(pgm);
+        //target.drawMap();
         const result = target.getMinMoves();
         expect(result).toEqual(expected);
     };
     var testPgm2 = async (pgm, expected) => {
         var target = new Day15();
-        await target.drawMap(pgm);
+        await target.getMap(pgm);
         const result = target.getMaxDistance();
         expect(result).toEqual(expected);
     };
