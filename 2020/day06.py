@@ -1,20 +1,6 @@
 from functools import reduce
 
-def buildGroups(lines):
-    groups = []
-    group = None
-    for line in lines:
-        if line == '':
-            group = None
-            continue
-        if group == None:
-            group = set()
-            groups.append(group)
-        for q in line:
-            group.add(q)
-    return groups
-
-def buildGroupsAll(lines):
+def buildGroups(lines, all=False):
     groups = []
     group = None
     for line in lines:
@@ -27,8 +13,12 @@ def buildGroupsAll(lines):
         if group == None:
             group = set(person)
             groups.append(group)
-        for q in group.difference(person):
-            group.remove(q)
+        if all:
+            for q in group.difference(person):
+                group.remove(q)
+        else:
+            for q in person.difference(group):
+                group.add(q)
     return groups
 
 def groupSum(groups):
@@ -39,7 +29,7 @@ def main():
         lines = [line.rstrip() for line in f]
     groups = buildGroups(lines)
     print(f'Part 1:{groupSum(groups)}')
-    groups = buildGroupsAll(lines)
+    groups = buildGroups(lines, True)
     print(f'Part 2:{groupSum(groups)}')
 
 if __name__ == "__main__":
