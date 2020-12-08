@@ -23,8 +23,8 @@ def getBags(lines):
 			print(f'Outer error {line}')
 	return bags
 
-def getContainsCount(bags, inner):
-	outers = {'shiny gold'}
+def getContainsCount(bags, test):
+	outers = {test}
 	hasNew = True
 	while hasNew:
 		hasNew = False
@@ -35,7 +35,7 @@ def getContainsCount(bags, inner):
 						outers.add(bag)
 						hasNew = True
 						break
-	outers.remove('shiny gold')
+	outers.remove(test)
 	return len(outers)
 
 contentCounts={}
