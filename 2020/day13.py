@@ -13,33 +13,17 @@ def nextDeparture(lines):
     return result
 
 def contest(lines):
-    max = -1
-    maxIx = 0
-    busses = []
-    ix = 0
-    for x in lines[1].split(','):
-        if x != 'x':
-            bus = int(x)
-            busses.append((bus, ix))
-            if (bus > max):
-                max = bus
-                maxIx = ix
-        ix += 1
     t = 0
-    jump = 1
-    for maxBus in range(len(busses)):
-        match = False
-        while True:
-            match = True
-            for bus, ix in busses[:maxBus+1]:
-                if (t+ix) % bus != 0:
-                    match = False
-                    break
-            if match:
-                break
-            t += jump
-        newBus = busses[maxBus][0]
-        jump = jump * newBus // gcd(jump, newBus)
+    lcm = 1
+    ix = -1
+    for part in lines[1].split(','):
+        ix += 1
+        if (part == 'x'):
+            continue
+        bus = int(part)
+        while (t+ix) % bus != 0:
+            t += lcm
+        lcm = lcm * bus // gcd(lcm, bus)
     return t
 
 def main():
