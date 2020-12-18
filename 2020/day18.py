@@ -14,25 +14,24 @@ def eval(line, adv, inMult=False):
             continue
         if char == " ":
             continue
-        if adv and char == "*":
-            if inMult:
+        if adv:
+            if inMult and char in "*)":
                 line = char + line
                 break
-            temp, line = eval(line, adv, True)
-            left = (left + right) * temp
-            right = 0
-            continue
+            if char == "*":
+                temp, line = eval(line, adv, True)
+                left = (left + right) * temp
+                right = 0
+                continue
         if char in "+*":
             left = evalOp(left, op, right)
             op = char
             right = 0
             continue
-        if char == ")":
-            if inMult:
-                line = char+line
-            break
         if char == "(":
             right, line = eval(line, adv)
+        if char == ")":
+            break
     return (evalOp(left, op, right), line)
 
 
