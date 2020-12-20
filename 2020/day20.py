@@ -69,6 +69,7 @@ def rotateTile(tile):
         sortedEdges[3],
         sortedEdges[0],
         )
+
 def flipMap(lines):
     newLines = []
     for line in lines:
@@ -85,7 +86,7 @@ def flipTile(tile):
         sortedEdges[1],
         )
 
-def getArrangement(tiles, corners, edgeCounts):
+def getArrangement(tiles, edgeCounts):
     arrangement = []
     x = 0
     y = 0
@@ -159,7 +160,6 @@ def markMonsters(map):
         for _ in range(4):
             for y in range(0, len(map)-3):
                 for x in range(0, len(map[0])-20):
-
                     isMonster = True
                     for dx, dy in moster:
                         if map[y+dy][x+dx]==".":
@@ -176,8 +176,8 @@ def markMonsters(map):
 
 def getRoughness(lines):
     tiles = getTiles(lines)
-    corners, edgeCounts = getCorners(tiles)
-    arrangement = getArrangement(tiles, corners, edgeCounts)
+    _, edgeCounts = getCorners(tiles)
+    arrangement = getArrangement(tiles, edgeCounts)
     map = buildMap(tiles, arrangement)
     map = markMonsters(map)
     return Counter("".join(map))['#']
