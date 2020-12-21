@@ -7,7 +7,8 @@ def buildRule(ruleLines, ix, fix):
     if ix in cache:
         return cache[ix]
     ruleLine = ruleLines[ix]
-    if match := charRe.match(ruleLine):
+    match = charRe.match(ruleLine)
+    if match:
         return match.group(1)
     rule = "(?:"
     delim = ""
