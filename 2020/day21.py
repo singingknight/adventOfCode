@@ -6,9 +6,6 @@ def getFoods(lines):
 	allergens = {}
 	for line in lines:
 		match = foodRe.match(line)
-		if not match:
-			print(f"FORMAT ERROR:{line}")
-			return None
 		ingredients = match.group(1).split(" ")
 		for allergen in match.group(2).split(", "):
 			ingredientSet = set(ingredients)
