@@ -24,14 +24,10 @@ def sumMem(lines):
     return sum(mem.values())
 
 def maskedValues(key, mask):
-    keys = []
     if "X" in mask:
-        keys = keys + maskedValues(key, mask.replace("X", "0", 1))
-        keys = keys + maskedValues(key, mask.replace("X", "1", 1))
-    else:
-        keys.append(key | int(mask, base=2))
-    return keys
-    
+        return maskedValues(key, mask.replace("X", "0", 1)) + maskedValues(key, mask.replace("X", "1", 1))
+    return [key | int(mask, base=2)]
+
 def sumMem2(lines):
     startTrans = "".maketrans("X0","01")
     maskRe = re.compile("^mask = ([X01]+)$")
