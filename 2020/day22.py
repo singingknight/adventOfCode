@@ -19,10 +19,10 @@ def play(decks, isRecursive):
         oldDecks.append((decks[0][:], decks[1][:]))
         test = []
         recurse = isRecursive
-        for ix, deck in enumerate(decks):
-            card, decks[ix] = deck[0], deck[1:]
+        for deck in decks:
+            card = deck.pop(0)
             test.append(card)
-            if len(decks[ix])<card:
+            if len(deck)<card:
                 recurse = False
         if recurse:
             _, winner = play([decks[0][:test[0]],decks[1][:test[1]]], True)
