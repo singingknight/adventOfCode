@@ -26,46 +26,46 @@ def orig_getLabel(cups, rounds):
     return cups[i+1:]+cups[:i]
 
 def play(start, cupCount, rounds):
-    cups = {}
+    nextCup = {}
     current = int(start[0])-1
     prev = current
     for cup in start[1:]:
         cup = int(cup)-1
-        cups[prev]=cup
+        nextCup[prev]=cup
         prev = cup
     for cup in range(len(start), cupCount):
-        cups[prev]=cup
+        nextCup[prev]=cup
         prev = cup
-    cups[prev] = current
+    nextCup[prev] = current
     for _ in range(rounds):
         pickups = []
         prev = current
         for _ in range(3):
-            prev = cups[prev]
+            prev = nextCup[prev]
             pickups.append(prev)
         destination = (current - 1) % cupCount
         while destination in pickups:
             destination = (destination - 1) % cupCount
-        cups[current]=cups[pickups[2]]
-        cups[pickups[2]]=cups[destination]
-        cups[destination]=pickups[0]
-        current = cups[current]
-    return cups
+        nextCup[current]=nextCup[pickups[2]]
+        nextCup[pickups[2]]=nextCup[destination]
+        nextCup[destination]=pickups[0]
+        current = nextCup[current]
+    return nextCup
 
 
 def getLabel(cups, rounds):
-    cups = play(cups, 9, rounds)
+    nextCup = play(cups, 9, rounds)
     label = ""
-    next = cups[0]
+    next = nextCup[0]
     while next != 0:
         label += str(next+1)
-        next = cups[next]
+        next = nextCup[next]
     return label
 
 def getStars(cups, cupCount, rounds):
-    cups = play(cups, cupCount, rounds)
-    first = cups[0]
-    second = cups[first]
+    nextCup = play(cups, cupCount, rounds)
+    first = nextCup[0]
+    second = nextCup[first]
     return (first+1)*(second+1)
 
 def main():
